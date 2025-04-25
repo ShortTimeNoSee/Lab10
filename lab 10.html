@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lab 10: Moments of Inertia Calculator</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; line-height: 1.4; }
+    h1,h2,h3 { margin-bottom: 0.5rem; }
+    .section { margin-bottom: 2rem; }
+    table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+    th, td { border: 1px solid #666; padding: 0.5rem; text-align: center; }
+    th { background: #ddd; }
+    input[type="number"] { width: 5rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; margin-top: 1rem; }
+    .results { background: #f9f9f9; padding: 1rem; border: 1px solid #ccc; margin-top: 1rem; }
+    ul { margin: 0.5rem 0; padding-left: 1.2rem; }
+  </style>
+</head>
+<body>
+
+  <h1>Lab 10: Moments of Inertia Calculator</h1>
+
+  <div class="section">
+    <h2>Definitions & Variables</h2>
+    <ul>
+      <li>g = 9.8 m/s²</li>
+      <li>mₕ = hanging mass (kg)</li>
+      <li>R = pulley radius (m)</li>
+      <li>m = each point-mass (kg)</li>
+      <li>r = point-mass radius (m)</li>
+      <li>M = solid disk mass (kg)</li>
+      <li>R<sub>disk</sub> = disk radius (m)</li>
+      <li>α = angular acceleration (rad/s²)</li>
+      <li>a = linear acceleration = α·R (m/s²)</li>
+      <li>I = moment of inertia (kg·m²)</li>
+    </ul>
+    <h2>Formulas</h2>
+    <ul>
+      <li>Iₜₒₜ = mₕ·(g − a)·R² ÷ a</li>
+      <li>I_beam = Iₜₒₜ − 2·m·r²</li>
+      <li>I₍disk₎ exp = mₕ·(g − a)·R² ÷ a</li>
+      <li>I₍disk₎ theory = ½·M·R<sub>disk</sub>²</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>Global Parameters</h2>
+    <label>g (m/s²): <input id="g" type="number" step="any" value="9.8"></label>
+    &nbsp;&nbsp;
+    <label>mₕ (kg): <input id="m_h" type="number" step="any"></label>
+    &nbsp;&nbsp;
+    <label>R (m): <input id="R" type="number" step="any"></label>
+    &nbsp;&nbsp;
+    <label>m (kg): <input id="m_point" type="number" step="any"></label>
+  </div>
+
+  <div class="section">
+    <h2>Point Mass System (6 Trials)</h2>
+    <table id="pointTable">
+      <thead>
+        <tr>
+          <th>Trial</th>
+          <th>r (m)</th>
+          <th>α (rad/s²)</th>
+          <th>a (m/s²)<br>= α·R</th>
+          <th>r² (m²)<br>= r×r</th>
+          <th>Iₜₒₜ (kg·m²)<br>= mₕ·(g−a)·R²÷a</th>
+          <th>I_beam (kg·m²)<br>= Iₜₒₜ−2·m·r²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><input type="number" step="any"></td>
+          <td><input type="number" step="any"></td>
+          <td class="a_lin"></td>
+          <td class="r2"></td>
+          <td class="I_tot"></td>
+          <td class="I_beam"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Solid Disk System</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>M (kg)</th>
+          <th>R<sub>disk</sub> (m)</th>
+          <th>α (rad/s²)</th>
+          <th>a (m/s²)<br>= α·R</th>
+          <th>I₍disk₎ exp (kg·m²)<br>= mₕ·(g−a)·R²÷a</th>
+          <th>I₍disk₎ theory (kg·m²)<br>= ½·M·R<sub>disk</sub>²</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input id="M_disk" type="number" step="any"></td>
+          <td><input id="R_disk" type="number" step="any"></td>
+          <td><input id="alpha_disk" type="number" step="any"></td>
+          <td id="a_disk"></td>
+          <td id="Iexp_disk"></td>
+          <td id="Itheory_disk"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button onclick="calculate()">Calculate</button>
+  <div id="results" class="results"></div>
+
+  <script>
+    function calculate() {
+      const g   = parseFloat(document.getElementById('g').value);
+      const m_h = parseFloat(document.getElementById('m_h').value);
+      const R   = parseFloat(document.getElementById('R').value);
+      const m_pt= parseFloat(document.getElementById('m_point').value);
+
+      document.querySelectorAll('#pointTable tbody tr').forEach(row => {
+        const r     = parseFloat(row.cells[1].firstElementChild.value);
+        const alpha = parseFloat(row.cells[2].firstElementChild.value);
+        if (!isNaN(r) && !isNaN(alpha)) {
+          const a_lin = alpha * R;
+          const r2    = r * r;
+          const I_tot = m_h * (g - a_lin) * R * R / a_lin;
+          const I_beam= I_tot - 2 * m_pt * r2;
+          row.querySelector('.a_lin').textContent   = a_lin.toFixed(4);
+          row.querySelector('.r2').textContent      = r2.toFixed(4);
+          row.querySelector('.I_tot').textContent   = I_tot.toFixed(5);
+          row.querySelector('.I_beam').textContent  = I_beam.toFixed(5);
+        }
+      });
+
+      // Solid disk
+      const M      = parseFloat(document.getElementById('M_disk').value);
+      const R_d    = parseFloat(document.getElementById('R_disk').value);
+      const alpha_d= parseFloat(document.getElementById('alpha_disk').value);
+      const a_d    = alpha_d * R;
+      const Iexp_d = m_h * (g - a_d) * R * R / a_d;
+      const Itheo_d= 0.5 * M * R_d * R_d;
+      const pd     = Math.abs(Iexp_d - Itheo_d) / Itheo_d * 100;
+      document.getElementById('a_disk').textContent      = a_d.toFixed(4);
+      document.getElementById('Iexp_disk').textContent   = Iexp_d.toFixed(5);
+      document.getElementById('Itheory_disk').textContent= Itheo_d.toFixed(5);
+
+      document.getElementById('results').innerHTML = `
+        <h3>Solid Disk System</h3>
+        <p>Experimental I₍disk₎ = ${Iexp_d.toFixed(5)} kg·m²</p>
+        <p>Theoretical I₍disk₎ = ½·M·R² = ${Itheo_d.toFixed(5)} kg·m²</p>
+        <p>Percent error = ${pd.toFixed(2)} %</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
