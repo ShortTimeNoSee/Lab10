@@ -69,59 +69,30 @@
         </tr>
       </thead>
       <tbody>
+        <!-- six rows -->
         <tr>
-          <td>1</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>1</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
         <tr>
-          <td>2</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>2</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
         <tr>
-          <td>3</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>3</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
         <tr>
-          <td>4</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>4</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
         <tr>
-          <td>5</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>5</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
         <tr>
-          <td>6</td>
-          <td><input type="number" step="any"></td>
-          <td><input type="number" step="any"></td>
-          <td class="a_lin"></td>
-          <td class="r2"></td>
-          <td class="I_tot"></td>
-          <td class="I_beam"></td>
+          <td>6</td><td><input type="number" step="any"></td><td><input type="number" step="any"></td>
+          <td class="a_lin"></td><td class="r2"></td><td class="I_tot"></td><td class="I_beam"></td>
         </tr>
       </tbody>
     </table>
@@ -153,48 +124,73 @@
     </table>
   </div>
 
+  <div class="section">
+    <h2>Iₜₒₜ vs r² Graph Results</h2>
+    <label>Slope (kg): <input id="slope_exp" type="number" step="any"></label>
+    &nbsp;&nbsp;
+    <label>Y-Intercept I_beam (kg·m²): <input id="yint_exp" type="number" step="any"></label>
+  </div>
+
   <button onclick="calculate()">Calculate</button>
   <div id="results" class="results"></div>
 
   <script>
     function calculate() {
-      const g   = parseFloat(document.getElementById('g').value);
-      const m_h = parseFloat(document.getElementById('m_h').value);
-      const R   = parseFloat(document.getElementById('R').value);
-      const m_pt= parseFloat(document.getElementById('m_point').value);
+      const g    = parseFloat(document.getElementById('g').value);
+      const m_h  = parseFloat(document.getElementById('m_h').value);
+      const R    = parseFloat(document.getElementById('R').value);
+      const m_pt = parseFloat(document.getElementById('m_point').value);
 
+      // point‐mass cases
+      let sum_I_beam = 0, count = 0;
       document.querySelectorAll('#pointTable tbody tr').forEach(row => {
         const r     = parseFloat(row.cells[1].firstElementChild.value);
         const alpha = parseFloat(row.cells[2].firstElementChild.value);
         if (!isNaN(r) && !isNaN(alpha)) {
-          const a_lin = alpha * R;
-          const r2    = r * r;
-          const I_tot = m_h * (g - a_lin) * R * R / a_lin;
-          const I_beam= I_tot - 2 * m_pt * r2;
+          const a_lin  = alpha * R;
+          const r2     = r * r;
+          const I_tot  = m_h * (g - a_lin) * R * R / a_lin;
+          const I_beam = I_tot - 2 * m_pt * r2;
           row.querySelector('.a_lin').textContent   = a_lin.toFixed(4);
           row.querySelector('.r2').textContent      = r2.toFixed(4);
           row.querySelector('.I_tot').textContent   = I_tot.toFixed(5);
           row.querySelector('.I_beam').textContent  = I_beam.toFixed(5);
+          sum_I_beam += I_beam;
+          count++;
         }
       });
+      const I_beam_avg = sum_I_beam / count;
 
-      // Solid disk
-      const M      = parseFloat(document.getElementById('M_disk').value);
-      const R_d    = parseFloat(document.getElementById('R_disk').value);
-      const alpha_d= parseFloat(document.getElementById('alpha_disk').value);
-      const a_d    = alpha_d * R;
-      const Iexp_d = m_h * (g - a_d) * R * R / a_d;
-      const Itheo_d= 0.5 * M * R_d * R_d;
-      const pd     = Math.abs(Iexp_d - Itheo_d) / Itheo_d * 100;
-      document.getElementById('a_disk').textContent      = a_d.toFixed(4);
+      // solid disk
+      const M        = parseFloat(document.getElementById('M_disk').value);
+      const R_disk   = parseFloat(document.getElementById('R_disk').value);
+      const alpha_d  = parseFloat(document.getElementById('alpha_disk').value);
+      const a_disk   = alpha_d * R;
+      const Iexp_d   = m_h * (g - a_disk) * R * R / a_disk;
+      const Itheo_d  = 0.5 * M * R_disk * R_disk;
+      const pd_disk  = Math.abs(Iexp_d - Itheo_d) / Itheo_d * 100;
+      document.getElementById('a_disk').textContent      = a_disk.toFixed(4);
       document.getElementById('Iexp_disk').textContent   = Iexp_d.toFixed(5);
       document.getElementById('Itheory_disk').textContent= Itheo_d.toFixed(5);
 
+      // graph‐fit comparison
+      const slope_exp = parseFloat(document.getElementById('slope_exp').value);
+      const yint_exp  = parseFloat(document.getElementById('yint_exp').value);
+      const slope_expct = 2 * m_pt;
+      const pd_slope   = Math.abs(slope_exp - slope_expct) / slope_expct * 100;
+      const pd_yint    = Math.abs(yint_exp - I_beam_avg) / I_beam_avg * 100;
+
+      // display
       document.getElementById('results').innerHTML = `
         <h3>Solid Disk System</h3>
         <p>Experimental I₍disk₎ = ${Iexp_d.toFixed(5)} kg·m²</p>
         <p>Theoretical I₍disk₎ = ½·M·R² = ${Itheo_d.toFixed(5)} kg·m²</p>
-        <p>Percent error = ${pd.toFixed(2)} %</p>
+        <p>Percent error = ${pd_disk.toFixed(2)} %</p>
+        <h3>Iₜₒₜ vs r² Graph Comparison</h3>
+        <p>Experimental slope = ${slope_exp.toFixed(5)} kg</p>
+        <p>Expected slope = 2·m = ${slope_expct.toFixed(5)} kg → % difference = ${pd_slope.toFixed(2)} %</p>
+        <p>Experimental y-intercept = ${yint_exp.toFixed(5)} kg·m²</p>
+        <p>Average calculated I_beam = ${I_beam_avg.toFixed(5)} kg·m² → % difference = ${pd_yint.toFixed(2)} %</p>
       `;
     }
   </script>
